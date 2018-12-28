@@ -17,12 +17,11 @@ namespace news_engine.Models
         [Required]
         public string Content { get; set; }
         public DateTime Date { get; set; }
-        public virtual ApplicationUser ApplicationUser { get; set; }
     }
 
     public class ArticleDbContext : DbContext
     {
-        public ArticleDbContext() : base("DbConnection") { }
+        public ArticleDbContext() : base("DefaultConnection") { }
         public DbSet<Article> Articles { get; set; }
     }
 }

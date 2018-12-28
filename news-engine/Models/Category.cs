@@ -18,7 +18,7 @@ namespace news_engine.Models
 
     public class CategoryDbContext : DbContext
     {
-        public CategoryDbContext() : base("DbConnection") { }
+        public CategoryDbContext() : base("DefaultConnection") { }
         public DbSet<Category> Categories { get; set; }
     }
 }
