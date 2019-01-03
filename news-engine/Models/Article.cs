@@ -16,7 +16,8 @@ namespace news_engine.Models
         public string Title { get; set; }
         [Required]
         public string Content { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } = DateTime.Now;
+     
     }
 
     public class ArticleDbContext : DbContext

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using PagedList;
 using news_engine.Models;
 
 namespace news_engine.Controllers
@@ -15,9 +16,14 @@ namespace news_engine.Controllers
         private ArticleDbContext db = new ArticleDbContext();
 
         // GET: Articles
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
-            return View(db.Articles.ToList());
+            var articles = from a in db.Articles select a;
+            articles = articles.OrderByDescending(a => a.Date);
+            int pageSize = 3;
+            int pageNumber = 1;
+            pageNumber = page.HasValue ? Convert.ToInt32(page) : 1;
+            return View(articles.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Articles/Details/5
@@ -36,6 +42,7 @@ namespace news_engine.Controllers
         }
 
         // GET: Articles/Create
+        [Authorize(Roles = "Editor,Administrator")]
         public ActionResult Create()
         {
             return View();
@@ -46,7 +53,7 @@ namespace news_engine.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ArticleId,Title,Content,Date")] Article article)
+        public ActionResult Create([Bind(Include = "ArticleId,Title,Content")] Article article)
         {
             if (ModelState.IsValid)
             {
@@ -59,6 +66,7 @@ namespace news_engine.Controllers
         }
 
         // GET: Articles/Edit/5
+        [Authorize(Roles = "Editor,Administrator")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -90,6 +98,7 @@ namespace news_engine.Controllers
         }
 
         // GET: Articles/Delete/5
+        [Authorize(Roles = "Editor,Administrator")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
