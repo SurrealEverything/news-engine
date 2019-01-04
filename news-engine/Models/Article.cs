@@ -17,12 +17,7 @@ namespace news_engine.Models
         [Required]
         public string Content { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;
-     
-    }
-
-    public class ArticleDbContext : DbContext
-    {
-        public ArticleDbContext() : base("DefaultConnection") { }
-        public DbSet<Article> Articles { get; set; }
+        public string UserId { get; set; }
+        public virtual ApplicationUser User { get; set; }
     }
 }

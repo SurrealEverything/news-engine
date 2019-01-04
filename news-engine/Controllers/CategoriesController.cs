@@ -12,7 +12,7 @@ namespace news_engine.Controllers
 {
     public class CategoriesController : Controller
     {
-        private CategoryDbContext db = new CategoryDbContext();
+        private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Categories
         public ActionResult Index()

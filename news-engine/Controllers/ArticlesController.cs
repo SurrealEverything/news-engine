@@ -13,7 +13,7 @@ namespace news_engine.Controllers
 {
     public class ArticlesController : Controller
     {
-        private ArticleDbContext db = new ArticleDbContext();
+        private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Articles
         public ActionResult Index(int? page)

@@ -15,10 +15,4 @@ namespace news_engine.Models
         public string Name { get; set; }
         
     }
-
-    public class CategoryDbContext : DbContext
-    {
-        public CategoryDbContext() : base("DefaultConnection") { }
-        public DbSet<Category> Categories { get; set; }
-    }
 }
