@@ -11,44 +11,11 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            Title
-        </th>
-        <th>
-            Content
-        </th>
-        <th>
-            Date
-        </th>
-        <th>
-            Author
-        </th>
-        <th></th>
 
-    </tr>
-
-    @foreach (var item in Model)
-    {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Content)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Date)
-        </td>
-        <td>@item.User.Email</td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.ArticleId }) |
-            @Html.ActionLink("Details", "Details", new { id = item.ArticleId }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.ArticleId })
-        </td>
-    </tr>
-    }
+@foreach (var article in Model)
+{
+    @Html.Partial("_Article", article)
+}
 
 </table>
 <div class="pg-container">Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))</div>
