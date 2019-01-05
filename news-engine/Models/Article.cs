@@ -19,6 +19,11 @@ namespace news_engine.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime Date { get; set; } = DateTime.Now;
+        public string ThumbnailUrl { get; set; }
+        [NotMapped]
+        public HttpPostedFileBase Thumbnail { get; set; }
+
+
         public string UserId { get; set; }
         public virtual ApplicationUser User { get; set; }
     }

@@ -12,6 +12,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.IO;
 
 namespace news_engine.Controllers
 {
@@ -57,20 +58,45 @@ namespace news_engine.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ArticleId,Title,Content")] Article article)
+        public ActionResult Create(Article article)
         {
-            var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
-            var user = manager.FindById(User.Identity.GetUserId());
-            article.User = user;
-            if (ModelState.IsValid)
+            if (article.Title != null && article.Content != null && article.Thumbnail != null)
             {
+                string imgName = Path.GetFileNameWithoutExtension(article.Thumbnail.FileName);
+                string extension = Path.GetExtension(article.Thumbnail.FileName);
+                imgName = imgName + DateTime.Now.ToString("yymmssff") + extension;
+                article.ThumbnailUrl = imgName;
+                article.Thumbnail.SaveAs(Path.Combine(Server.MapPath("~/App_Files/Images"), imgName));
+
+                var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                var user = manager.FindById(User.Identity.GetUserId());
+                article.User = user;
+
                 db.Articles.Add(article);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                var result = "Article creation successful";
+                RedirectToAction("Index");
+                return Json(result, JsonRequestBehavior.AllowGet);
             }
+            var resultFailure = article.Thumbnail.FileName;
+            return Json(resultFailure, JsonRequestBehavior.AllowGet);
 
-            return View(article);
         }
+
+        //public ActionResult Create(Article article)
+        //{
+        //    var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+        //    var user = manager.FindById(User.Identity.GetUserId());
+        //    article.User = user;
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.Articles.Add(article);
+        //        db.SaveChanges();
+        //        return RedirectToAction("Index");
+        //    }
+
+        //    return View(article);
+        //}
 
         // GET: Articles/Edit/5
         [Authorize(Roles = "Editor,Administrator")]
