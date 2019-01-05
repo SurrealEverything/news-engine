@@ -16,6 +16,8 @@ namespace news_engine.Models
         public string Title { get; set; }
         [Required]
         public string Content { get; set; }
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime Date { get; set; } = DateTime.Now;
         public string UserId { get; set; }
         public virtual ApplicationUser User { get; set; }

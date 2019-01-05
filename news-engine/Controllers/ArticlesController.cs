@@ -8,6 +8,10 @@ using System.Web;
 using System.Web.Mvc;
 using PagedList;
 using news_engine.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace news_engine.Controllers
 {
@@ -55,6 +59,9 @@ namespace news_engine.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ArticleId,Title,Content")] Article article)
         {
+            var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+            var user = manager.FindById(User.Identity.GetUserId());
+            article.User = user;
             if (ModelState.IsValid)
             {
                 db.Articles.Add(article);

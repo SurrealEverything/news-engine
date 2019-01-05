@@ -2,6 +2,7 @@
 using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -17,6 +18,8 @@ namespace news_engine.Models
             // Add custom user claims here
             return userIdentity;
         }
+
+        public IEnumerable<SelectListItem> AllRoles { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
@@ -27,9 +30,13 @@ namespace news_engine.Models
         }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Article> Articles { get; set; }
+
+        
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
         }
+
+        
     }
 }

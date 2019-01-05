@@ -1,0 +1,42 @@
+﻿@model news_engine.Models.ApplicationUser
+@using news_engine.Controllers;
+@{
+
+    ViewBag.Title = "Users";
+}
+<ol class="breadcrumb">
+    <li><h3>@ViewBag.Title</h3></li>
+</ol>
+@foreach (var user in ViewBag.Users as List<UserWithRole>)
+{
+<div class="user-panel">
+    <div class="panel-heading"><i class="glyphicon glyphicon-user"></i> <strong>User name:</strong> @user.User.UserName</div>
+    <div class="panel-body">
+        <i class="glyphicon glyphicon-envelope"></i> <strong>User email:</strong>
+        @user.User.Email
+        <br /><br />
+        @if (user.Role == "Administrator")
+        {
+            <i class="glyphicon glyphicon-eye-open"></i>
+        }
+        else if (user.Role == "Editor")
+        {
+            <i class="glyphicon glyphicon-pencil"></i>
+        }
+        else
+        {
+            <i class="glyphicon glyphicon-eye-close"></i>
+        }
+
+            <strong>User role:</strong> @user.Role
+    </div>
+
+
+    <div class="panel-footer">
+        <a class="btn btn-success" href="/Users/Edit/@user.User.Id">
+            Edit user
+        </a>
+    </div>
+    <br /><br />
+</div>
+}
