@@ -4,11 +4,32 @@ using news_engine.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
 namespace news_engine.Controllers
 {
+    public static class UserGetter
+    {
+        public static ApplicationUser GetApplicationUser(this System.Security.Principal.IIdentity identity)
+        {
+            if (identity.IsAuthenticated)
+            {
+                using (var db = new ApplicationDbContext())
+                {
+                    var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                    return userManager.FindByName(identity.Name);
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+    }
+
     public class UserWithRole
     {
         public ApplicationUser User { get; set; }
@@ -65,7 +86,8 @@ namespace news_engine.Controllers
                 });
             }
             return selectList;
-        }
+        }
+
         [HttpPut]
         public ActionResult Edit(string id, ApplicationUser newData)
         {
@@ -105,6 +127,58 @@ namespace news_engine.Controllers
             }
 
         }
+        // POST: /Users/Delete/5
+        [HttpPost, ActionName("Delete")]
+        public async Task<ActionResult> DeleteConfirmed(string id)
+        {
+            if (ModelState.IsValid)
+            {
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
 
+                var _userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                var user = await _userManager.FindByIdAsync(id);
+                var logins = user.Logins;
+                var articles = user.Articles;
+                var rolesForUser = await _userManager.GetRolesAsync(id);
+
+                using (var transaction = db.Database.BeginTransaction())
+                {
+                    foreach (var login in logins.ToList())
+                    {
+                        await _userManager.RemoveLoginAsync(login.UserId, new UserLoginInfo(login.LoginProvider, login.ProviderKey));
+                    }
+
+                    if (rolesForUser.Count() > 0)
+                    {
+                        foreach (var item in rolesForUser.ToList())
+                        {
+                            // item should be the name of the role
+                            var result = await _userManager.RemoveFromRoleAsync(user.Id, item);
+                        }
+                    }
+
+                    if (articles.Count > 0)
+                    {
+                        foreach (var article in articles.ToList())
+                        {
+                            db.Articles.Remove(article);
+                            await db.SaveChangesAsync();
+                        }
+                    }
+
+                    await _userManager.DeleteAsync(user);
+                    transaction.Commit();
+                }
+
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View();
+            }
+        }
     }
 }

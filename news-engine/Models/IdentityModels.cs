@@ -20,6 +20,7 @@ namespace news_engine.Models
         }
 
         public IEnumerable<SelectListItem> AllRoles { get; set; }
+        public virtual ICollection<Article> Articles { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>

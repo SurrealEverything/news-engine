@@ -78,7 +78,7 @@ namespace news_engine.Controllers
                 RedirectToAction("Index");
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
-            var resultFailure = article.Thumbnail.FileName;
+            var resultFailure = "Error";
             return Json(resultFailure, JsonRequestBehavior.AllowGet);
 
         }
@@ -107,11 +107,22 @@ namespace news_engine.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Article article = db.Articles.Find(id);
+
             if (article == null)
             {
                 return HttpNotFound();
             }
-            return View(article);
+            if (article.UserId == User.Identity.GetUserId() || User.IsInRole("Administrator"))
+            {
+                return View(article);
+            }
+            else
+            {
+                TempData["message"] = "Permission denied";
+ return RedirectToAction("Index");
+
+            }
+
         }
 
         // POST: Articles/Edit/5
@@ -119,15 +130,36 @@ namespace news_engine.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ArticleId,Title,Content,Date")] Article article)
+        public ActionResult Edit(Article article)
         {
-            if (ModelState.IsValid)
+            string path = "";
+            var fileName = "";
+            if (article.Thumbnail != null)
             {
-                db.Entry(article).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                fileName = Path.GetFileName(article.Thumbnail.FileName);
+                fileName = DateTime.Now.ToString("yymmddssff") + fileName;
+                path = Path.Combine(Server.MapPath("~/App_Files/Images"), fileName);
+
+                if (ModelState.IsValid)
+                {
+                    if (article.UserId == User.Identity.GetUserId() || User.IsInRole("Administrator"))
+                    {
+                        article.Thumbnail.SaveAs(path);
+                        article.ThumbnailUrl = fileName;
+                        db.Entry(article).State = EntityState.Modified;
+                        db.SaveChanges();
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        TempData["message"] = "Permission denied";
+                        return RedirectToAction("Index");
+                    }
+
+
+                }
             }
-            return View(article);
+            return Json("Error", JsonRequestBehavior.AllowGet);
         }
 
         // GET: Articles/Delete/5

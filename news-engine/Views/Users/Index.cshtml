@@ -30,12 +30,15 @@
 
             <strong>User role:</strong> @user.Role
     </div>
-
+    <form id="DeleteUser"></form>
 
     <div class="panel-footer">
         <a class="btn btn-success" href="/Users/Edit/@user.User.Id">
             Edit user
         </a>
+        <button class="btn btn-danger" type="submit" form="DeleteUser" formaction="/Users/Delete/@user.User.Id" formmethod="post">
+            Delete user
+        </button>
     </div>
     <br /><br />
 </div>

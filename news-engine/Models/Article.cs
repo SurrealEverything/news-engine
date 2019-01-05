@@ -15,6 +15,7 @@ namespace news_engine.Models
         [Required]
         public string Title { get; set; }
         [Required]
+        [DataType(DataType.MultilineText)]
         public string Content { get; set; }
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
