@@ -34,10 +34,10 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Category.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label class="control-label col-md-2">Select article category</label>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Category.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Category.Name, "", new { @class = "text-danger" })
+                @Html.DropDownList("newCategory", new SelectList(ViewBag.categories, "Value", "Text", Model.Category.CategoryId.ToString()), null, new { @class = "form-control" })
+
             </div>
         </div>
 

@@ -13,6 +13,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.IO;
+using System.Diagnostics;
 
 namespace news_engine.Controllers
 {
@@ -62,6 +63,7 @@ namespace news_engine.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator,Editor")]
         public ActionResult Create(Article article)
         {
             if (article.Title != null && article.Content != null && article.Thumbnail != null)
@@ -89,22 +91,6 @@ namespace news_engine.Controllers
             return Json(resultFailure, JsonRequestBehavior.AllowGet);
 
         }
-
-        //public ActionResult Create(Article article)
-        //{
-        //    var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
-        //    var user = manager.FindById(User.Identity.GetUserId());
-        //    article.User = user;
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.Articles.Add(article);
-        //        db.SaveChanges();
-        //        return RedirectToAction("Index");
-        //    }
-
-        //    return View(article);
-        //}
-
         // GET: Articles/Edit/5
         [Authorize(Roles = "Editor,Administrator")]
         public ActionResult Edit(int? id)
@@ -121,6 +107,8 @@ namespace news_engine.Controllers
             }
             if (article.UserId == User.Identity.GetUserId() || User.IsInRole("Administrator"))
             {
+                IEnumerable<SelectListItem> categories = GetAllCategories();
+                ViewBag.Categories = categories;
                 return View(article);
             }
             else
@@ -131,12 +119,32 @@ namespace news_engine.Controllers
             }
 
         }
+        [NonAction]
+        public IEnumerable<SelectListItem> GetAllCategories()
+        {
+            var selectList = new List<SelectListItem>();
+
+            var categories = from category in db.Categories select category;
+
+            foreach (var category in categories)
+            {
+            
+                selectList.Add(new SelectListItem
+                {
+                    Value = category.CategoryId.ToString(),
+                    Text = category.Name.ToString()
+                });
+            }
+
+            return selectList;
+        }
 
         // POST: Articles/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator,Editor")]
         public ActionResult Edit(Article article)
         {
             string path = "";
@@ -153,6 +161,11 @@ namespace news_engine.Controllers
                     {
                         article.Thumbnail.SaveAs(path);
                         article.ThumbnailUrl = fileName;
+                        var newCategoryName = HttpContext.Request.Params.Get("newCategory");
+                        int newCategoryId = Convert.ToInt32(newCategoryName);
+                        article.CategoryId = newCategoryId;
+                        Category newCategory = db.Categories.Find(newCategoryId);
+                        
                         db.Entry(article).State = EntityState.Modified;
                         db.SaveChanges();
                         return RedirectToAction("Index");
@@ -162,8 +175,6 @@ namespace news_engine.Controllers
                         TempData["message"] = "Permission denied";
                         return RedirectToAction("Index");
                     }
-
-
                 }
             }
             return Json("Error", JsonRequestBehavior.AllowGet);

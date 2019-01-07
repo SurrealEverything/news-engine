@@ -13,11 +13,7 @@ namespace news_engine
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            routes.MapRoute(
-                name: "Home",
-                url: "Home",
-                defaults: new { controller = "Articles", action = "Index" }
-            );
+            
 
             routes.MapRoute(
                 name: "Default",

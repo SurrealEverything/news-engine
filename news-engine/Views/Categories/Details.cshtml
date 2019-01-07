@@ -20,17 +20,10 @@
         </dd>
     </dl>
 
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Articles)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Articles)
-        </dd>
-    </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.CategoryId }) |
-    @Html.ActionLink("Back to List", "Index")
+    @foreach (var article in Model.Articles)
+    {
+        @Html.Partial("~/Views/Articles/_Article.cshtml", article)
+    }
 </p>

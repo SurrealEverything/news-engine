@@ -113,8 +113,7 @@ namespace news_engine.Controllers
                     {
                         UserManager.RemoveFromRole(id, role.Name);
                     }
-                    var selectedRole =
-                    db.Roles.Find(HttpContext.Request.Params.Get("newRole"));
+                    var selectedRole = db.Roles.Find(HttpContext.Request.Params.Get("newRole"));
                     UserManager.AddToRole(id, selectedRole.Name);
                     db.SaveChanges();
                 }

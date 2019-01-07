@@ -27,7 +27,9 @@ namespace news_engine.Models
         public string RedirectLink { get; set; }
         public string UserId { get; set; }
         public virtual ApplicationUser User { get; set; }
-        //[Required]
-        public virtual Category Category { get; set; } 
+        public int CategoryId { get; set; }
+        public virtual Category Category { get; set; }
+        [NotMapped]
+        public string newCategory { get; set; }
     }
 }
