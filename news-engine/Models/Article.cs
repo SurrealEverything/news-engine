@@ -23,9 +23,11 @@ namespace news_engine.Models
         public string ThumbnailUrl { get; set; }
         [NotMapped]
         public HttpPostedFileBase Thumbnail { get; set; }
-        [RegularExpression("^[(http(s)?):\\/\\/(www\\.)?a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)$")]
+        [RegularExpression("^[(http(s)?):\\/\\/(www\\.)?a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)$", ErrorMessage = "Please enter a valid URL")]
         public string RedirectLink { get; set; }
         public string UserId { get; set; }
         public virtual ApplicationUser User { get; set; }
+        //[Required]
+        public virtual Category Category { get; set; } 
     }
 }

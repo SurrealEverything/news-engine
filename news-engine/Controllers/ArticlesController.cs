@@ -21,9 +21,13 @@ namespace news_engine.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Articles
-        public ActionResult Index(int? page)
+        public ActionResult Index(int? page, string searchString)
         {
             var articles = from a in db.Articles select a;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                articles = articles.Where(a => a.Title.Contains(searchString));
+            }
             articles = articles.OrderByDescending(a => a.Date);
             int pageSize = 3;
             int pageNumber = 1;
@@ -72,6 +76,9 @@ namespace news_engine.Controllers
                 var user = manager.FindById(User.Identity.GetUserId());
                 article.User = user;
 
+                //var categoryName = article.Category.Name;
+                //category = db.Categories.Where(i => i.Name == categoryName).FirstOrDefault();
+                //category.Articles.
                 db.Articles.Add(article);
                 db.SaveChanges();
                 var result = "Article creation successful";

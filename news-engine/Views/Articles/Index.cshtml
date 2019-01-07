@@ -13,6 +13,13 @@
         @Html.ActionLink("Create New", "Create")
     </p>
 }
+@using (Html.BeginForm())
+{
+    <p>
+        Find by titles: @Html.TextBox("SearchString")
+        <input type="submit" value="Search" />
+    </p>
+}
 
 @foreach (var article in Model)
 {

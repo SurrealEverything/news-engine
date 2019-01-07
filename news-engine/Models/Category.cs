@@ -12,7 +12,8 @@ namespace news_engine.Models
         [Key]
         public int CategoryId { get; set; }
         [Required]
+        [System.ComponentModel.DisplayName("Category")]
         public string Name { get; set; }
-        
+        public virtual ICollection<Article> Articles { get; set; } 
     }
 }

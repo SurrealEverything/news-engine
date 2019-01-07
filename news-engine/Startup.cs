@@ -21,9 +21,9 @@ namespace news_engine
         {
             ApplicationDbContext context = new ApplicationDbContext();
             var roleManager = new RoleManager<IdentityRole>(new
-           RoleStore<IdentityRole>(context));
+            RoleStore<IdentityRole>(context));
             var UserManager = new UserManager<ApplicationUser>(new
-           UserStore<ApplicationUser>(context));
+            UserStore<ApplicationUser>(context));
 
             if (!roleManager.RoleExists("Administrator"))
             {
