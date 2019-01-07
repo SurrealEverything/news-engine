@@ -13,13 +13,15 @@
 <p class="text-right"><i class="glyphicon glyphicon-calendar"></i>@Model.Date.ToShortDateString()</p>
 
 <div class="article-body">@Html.Raw(Model.Content.Replace("\n", "<br />"))</div>
-
-
+@if (Model.RedirectLink != null)
+{
+    <p class="article-body"><i class="glyphicon glyphicon-link"></i><a href="@Model.RedirectLink">View article here</a></p>
+}
 <p>
     @if (User.IsInRole("Administrator") || (User.IsInRole("Editor") && User.Identity.GetApplicationUser().Id == Model.UserId))
     {
         @Html.ActionLink("Edit", "Edit", new { id = Model.ArticleId }, new { @class = "btn btn-success" })
-        
+
         @Html.ActionLink("Delete", "Delete", new { id = Model.ArticleId }, new { @class = "btn btn-danger" })
     }
 </p>

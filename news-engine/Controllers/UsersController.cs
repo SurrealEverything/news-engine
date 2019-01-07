@@ -29,7 +29,7 @@ namespace news_engine.Controllers
             }
         }
     }
-
+    
     public class UserWithRole
     {
         public ApplicationUser User { get; set; }
