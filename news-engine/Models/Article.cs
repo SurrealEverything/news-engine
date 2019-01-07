@@ -28,6 +28,7 @@ namespace news_engine.Models
         public string UserId { get; set; }
         public virtual ApplicationUser User { get; set; }
         //[Required]
-        public virtual Category Category { get; set; } 
+        public virtual Category Category { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }

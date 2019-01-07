@@ -25,3 +25,13 @@
         @Html.ActionLink("Delete", "Delete", new { id = Model.ArticleId }, new { @class = "btn btn-danger" })
     }
 </p>
+<p>
+    @Html.ActionLink("Create New", "Create", "Comments")
+    
+</p>
+<p>
+    @foreach (var comment in Model.Comments)
+    {
+        @Html.Partial("_Comment", comment)
+    }
+</p>

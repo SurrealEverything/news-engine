@@ -11,14 +11,16 @@ using System.Web.Mvc;
 
 namespace news_engine.Controllers
 {
+    [Route("Articles/Comments")]
     public class CommentsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Comments
-        public ActionResult Index(int? page)
+        public ActionResult Index(int? page, int articleId)
         {
             var comments = from a in db.Comments select a;
+            comments = comments.Where(c => c.ArticleId.Equals(articleId));
             comments = comments.OrderByDescending(c => c.Date);
             int pageSize = 3;
             int pageNumber = 1;
