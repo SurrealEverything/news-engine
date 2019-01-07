@@ -7,10 +7,12 @@
 }
 
 <h2>Index</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+@if (User.IsInRole("Administrator") || (User.IsInRole("Editor")))
+{
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+}
 
 @foreach (var article in Model)
 {
